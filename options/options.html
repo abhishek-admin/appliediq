@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AppliedIQ — Options</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-card: #1e293b;
+      --bg-input: #0f172a;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-logo {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .page-title {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* ── Sections ── */
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-body {
+      padding: 20px;
+    }
+
+    /* ── Form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-grid.single { grid-template-columns: 1fr; }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-field label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 8px 11px;
+      font-size: 13px;
+      font-family: var(--font);
+      outline: none;
+      width: 100%;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: var(--text-dim);
+    }
+
+    .form-field .hint {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: background 0.15s;
+    }
+
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-secondary { background: var(--border); color: var(--text-muted); }
+    .btn-secondary:hover { background: #475569; color: var(--text); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+    .btn-ghost:hover { color: var(--text); border-color: #475569; }
+
+    .btn-danger { background: #7f1d1d; color: #fca5a5; }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+
+    .btn-success { background: #166534; color: #86efac; }
+    .btn-success:hover { background: var(--success); color: #fff; }
+
+    /* ── Queries ── */
+    .query-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .query-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      transition: border-color 0.15s;
+    }
+
+    .query-item:hover { border-color: #475569; }
+
+    .query-info { flex: 1; min-width: 0; }
+
+    .query-name {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .query-desc {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .query-url {
+      font-size: 10px;
+      color: #3b82f6;
+      word-break: break-all;
+      line-height: 1.3;
+    }
+
+    .query-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+      align-items: flex-start;
+    }
+
+    /* ── API Key display ── */
+    .api-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .api-status.ok { background: #166534; color: #86efac; }
+    .api-status.missing { background: #7f1d1d; color: #fca5a5; }
+
+    /* ── Toast ── */
+    .save-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #166534;
+      color: #dcfce7;
+      border: 1px solid #15803d;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+    .save-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Add Query Form ── */
+    #add-query-form {
+      background: var(--bg-input);
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+      padding: 14px;
+      margin-top: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #add-query-form.visible { display: flex; }
+
+    .inline-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .inline-row .form-field { flex: 1; }
+
+    /* ── Data Management ── */
+    .danger-zone {
+      border-color: #7f1d1d;
+    }
+    .danger-zone .section-header {
+      border-color: #7f1d1d;
+      background: #1a0a0a;
+    }
+    .danger-zone .section-title { color: #f87171; }
+
+    .data-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Stats ── */
+    .storage-info {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <span class="page-logo">⚡ AppliedIQ</span>
+    <span class="page-title">Settings & Configuration</span>
+  </div>
+
+  <!-- Section 1: Profile -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">👤 Your Profile</span>
+      <span id="profile-saved" style="font-size:11px;color:var(--text-dim);display:none">✓ Saved</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Your Name</label>
+          <input type="text" id="pf-name" placeholder="Abhishek (Happy)" />
+        </div>
+        <div class="form-field">
+          <label>Current Role</label>
+          <input type="text" id="pf-current-role" placeholder="Senior SDET @ Tavant Technologies" />
+        </div>
+        <div class="form-field">
+          <label>Years of Experience</label>
+          <input type="text" id="pf-experience" placeholder="6" />
+        </div>
+        <div class="form-field">
+          <label>Target Role</label>
+          <input type="text" id="pf-target-role" placeholder="Senior SDET / SQE" />
+        </div>
+        <div class="form-field">
+          <label>Location Preference</label>
+          <input type="text" id="pf-location" placeholder="Bengaluru, India / Remote" />
+        </div>
+        <div class="form-field">
+          <label>Notice Period</label>
+          <input type="text" id="pf-notice" placeholder="30 days / Immediate" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="btn-save-profile">Save Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Gemini API -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">🤖 Gemini AI Integration</span>
+      <span class="api-status" id="api-status-badge">⚠ Not configured</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid single">
+        <div class="form-field">
+          <label>Gemini API Key</label>
+          <input type="password" id="gemini-api-key" placeholder="AIza…" autocomplete="off" />
+          <span class="hint">
+            Get a free key at <strong>aistudio.google.com/apikey</strong>. Stored locally only — never transmitted except to the Gemini API.
+          </span>
+        </div>
+        <div class="form-field" style="margin-top:10px">
+          <label>Model Name</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="text" id="gemini-model" placeholder="gemini-2.5-flash-preview-04-17" style="flex:1" />
+            <button class="btn btn-ghost btn-sm" id="btn-list-models" title="Fetch available models from the API">List Models</button>
+          </div>
+          <span class="hint">Google changes model names over time. Click "List Models" to see what's available with your key, then paste the correct name above.</span>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost btn-sm" id="btn-test-api">Test Connection</button>
+        <button class="btn btn-primary" id="btn-save-api">Save API Key &amp; Model</button>
+      </div>
+      <div id="api-test-result" style="margin-top:10px;font-size:12px;color:var(--text-muted);display:none"></div>
+      <div id="models-list" style="margin-top:10px;display:none">
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em">Available generateContent models — click to use</div>
+        <div id="models-list-items" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Follow-up Settings -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">⏰ Follow-up Settings</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Follow-up Reminder (days after applying)</label>
+          <select id="followup-days">
+            <option value="3">3 days</option>
+            <option value="4">4 days</option>
+            <option value="5" selected>5 days (recommended)</option>
+            <option value="7">7 days</option>
+          </select>
+          <span class="hint">
+            Background alarm checks daily. Notification fires when a job's follow-up date passes and status is still "Applied".
+          </span>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" id="btn-save-followup">Save Setting</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: LinkedIn Search Queries -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">🔎 Saved LinkedIn Search Queries</span>
+      <button class="btn btn-secondary btn-sm" id="btn-show-add-query">＋ Add Query</button>
+    </div>
+    <div class="section-body">
+
+      <!-- Add Query Form -->
+      <div id="add-query-form">
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Query Name</label>
+            <input type="text" id="aq-name" placeholder="SDET Remote — Last 24h" />
+          </div>
+          <div class="form-field">
+            <label>Description</label>
+            <input type="text" id="aq-desc" placeholder="Senior level, Remote, Last 24h" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>LinkedIn Search URL</label>
+          <input type="url" id="aq-url" placeholder="https://www.linkedin.com/jobs/search/?keywords=…" />
+          <span class="hint">Build your URL at linkedin.com/jobs/search with filters applied, then paste here.</span>
+        </div>
+        <div class="inline-row">
+          <button class="btn btn-primary btn-sm" id="btn-save-query">Add Query</button>
+          <button class="btn btn-secondary btn-sm" id="btn-cancel-query">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Query List -->
+      <div class="query-list" id="query-list">
+        <!-- Rendered by options.js -->
+      </div>
+
+      <div style="margin-top:12px">
+        <button class="btn btn-ghost btn-sm" id="btn-reset-queries">Reset to Defaults</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5: LinkedIn Parameter Reference -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">📖 LinkedIn URL Parameter Reference</span>
+    </div>
+    <div class="section-body">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border)">
+            <th style="text-align:left;padding:6px 8px;color:var(--text-dim);font-size:10px;text-transform:uppercase">Parameter</th>
+            <th style="text-align:left;padding:6px 8px;color:var(--text-dim);font-size:10px;text-transform:uppercase">Values</th>
+            <th style="text-align:left;padding:6px 8px;color:var(--text-dim);font-size:10px;text-transform:uppercase">Meaning</th>
+          </tr>
+        </thead>
+        <tbody id="param-table">
+          <tr><td style="padding:6px 8px;color:#60a5fa;font-family:monospace">keywords</td><td style="padding:6px 8px;color:var(--text-muted)">Senior+QA+Engineer OR SDET</td><td style="padding:6px 8px;color:var(--text-dim)">Job title targeting</td></tr>
+          <tr style="background:#1a2233"><td style="padding:6px 8px;color:#60a5fa;font-family:monospace">location</td><td style="padding:6px 8px;color:var(--text-muted)">India, Bengaluru, Remote</td><td style="padding:6px 8px;color:var(--text-dim)">Geography</td></tr>
+          <tr><td style="padding:6px 8px;color:#60a5fa;font-family:monospace">f_E</td><td style="padding:6px 8px;color:var(--text-muted)">3=Mid, 4=Senior, 5=Director</td><td style="padding:6px 8px;color:var(--text-dim)">Experience level</td></tr>
+          <tr style="background:#1a2233"><td style="padding:6px 8px;color:#60a5fa;font-family:monospace">f_TPR</td><td style="padding:6px 8px;color:var(--text-muted)">r86400=24h, r604800=7d, r2592000=30d</td><td style="padding:6px 8px;color:var(--text-dim)">Recency</td></tr>
+          <tr><td style="padding:6px 8px;color:#60a5fa;font-family:monospace">f_WT</td><td style="padding:6px 8px;color:var(--text-muted)">1=On-site, 2=Remote, 3=Hybrid</td><td style="padding:6px 8px;color:var(--text-dim)">Work type</td></tr>
+          <tr style="background:#1a2233"><td style="padding:6px 8px;color:#60a5fa;font-family:monospace">f_JT</td><td style="padding:6px 8px;color:var(--text-muted)">F=Full-time, C=Contract</td><td style="padding:6px 8px;color:var(--text-dim)">Job type</td></tr>
+          <tr><td style="padding:6px 8px;color:#60a5fa;font-family:monospace">f_I</td><td style="padding:6px 8px;color:var(--text-muted)">96=Software/IT, 4=Internet, 6=Financial</td><td style="padding:6px 8px;color:var(--text-dim)">Industry</td></tr>
+          <tr style="background:#1a2233"><td style="padding:6px 8px;color:#60a5fa;font-family:monospace">sortBy</td><td style="padding:6px 8px;color:var(--text-muted)">DD=Date, R=Relevance</td><td style="padding:6px 8px;color:var(--text-dim)">Sort order</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section 6: Data Management -->
+  <div class="section danger-zone">
+    <div class="section-header">
+      <span class="section-title">⚠ Data Management</span>
+    </div>
+    <div class="section-body">
+      <div class="data-actions">
+        <button class="btn btn-ghost" id="btn-export-json">⬇ Export JSON</button>
+        <button class="btn btn-ghost" id="btn-export-csv">⬇ Export CSV</button>
+        <button class="btn btn-danger" id="btn-clear-all">🗑 Clear All Data</button>
+      </div>
+      <div class="storage-info" id="storage-info">Loading storage info…</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Save Toast -->
+<div class="save-toast" id="save-toast">✓ Settings saved</div>
+
+<script src="../utils/storage.js"></script>
+<script src="options.js"></script>
+</body>
+</html>
