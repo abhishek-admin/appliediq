@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "AppliedIQ",
+  "version": "1.0.0",
+  "description": "Track every job you apply to — from LinkedIn Easy Apply, external portals, or manually. Never lose an application again.",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png"
+    },
+    "default_title": "AppliedIQ — Job Tracker"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options/options.html",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "tabs",
+    "activeTab",
+    "scripting",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/*"],
+      "js": ["content/content-linkedin.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://*/*"],
+      "exclude_matches": ["https://www.linkedin.com/*"],
+      "js": ["content/content-portal.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/icons/*.png"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
