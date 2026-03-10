@@ -40,7 +40,7 @@ appliediq/
 │   └── emailTemplates.js      → Follow-up email copy templates
 ├── assets/
 │   └── icons/                 → 16px, 48px, 128px extension icons
-├── GEMINI.md                  → LLM persona and instruction file
+├── .gitignore                 → Git ignore rules
 └── README.md                  → This file
 ```
 
@@ -226,7 +226,7 @@ One click on any saved query → opens LinkedIn in a new tab with all filters pr
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/appliediq.git
+git clone https://github.com/abhishek-admin/appliediq.git
 cd appliediq
 
 # 2. Open Chrome and navigate to
