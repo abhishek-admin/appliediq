@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AppliedIQ</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <span class="logo">⚡ AppliedIQ</span>
+      <span class="header-subtitle">Job Application Tracker</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-icon" id="btn-add" title="Add job manually">＋ Add Job</button>
+      <button class="btn btn-icon btn-secondary" id="btn-options" title="Settings">⚙</button>
+    </div>
+  </header>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat">
+      <span class="stat-value" id="stat-total">0</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value stat-active" id="stat-applied">0</span>
+      <span class="stat-label">Applied</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value stat-warn" id="stat-followup">0</span>
+      <span class="stat-label">Follow-up Due</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value stat-success" id="stat-interview">0</span>
+      <span class="stat-label">In Process</span>
+    </div>
+  </div>
+
+  <!-- Toolbar: search + filter + sort + export -->
+  <div class="toolbar">
+    <input type="search" id="search-input" class="search-input" placeholder="Search company or role…" />
+    <select id="filter-status" class="select-input">
+      <option value="">All Statuses</option>
+      <option value="Applied">Applied</option>
+      <option value="Followed Up">Followed Up</option>
+      <option value="Interview Scheduled">Interview Scheduled</option>
+      <option value="Technical Round">Technical Round</option>
+      <option value="HR Round">HR Round</option>
+      <option value="Offer">Offer</option>
+      <option value="Rejected">Rejected</option>
+      <option value="Ghosted">Ghosted</option>
+    </select>
+    <select id="sort-by" class="select-input select-small">
+      <option value="date-desc">Newest</option>
+      <option value="date-asc">Oldest</option>
+      <option value="company">Company</option>
+    </select>
+    <button class="btn btn-ghost" id="btn-export" title="Export CSV">⬇ CSV</button>
+  </div>
+
+  <!-- AI Toolbar -->
+  <div class="ai-toolbar">
+    <button class="ai-btn" id="btn-ai-analyze">📊 Analyze</button>
+    <button class="ai-btn" id="btn-ai-jd">📝 Evaluate JD</button>
+    <button class="ai-btn" id="btn-ai-links">🔗 Search Links</button>
+    <button class="ai-btn" id="btn-ai-prioritize">🎯 Prioritize</button>
+  </div>
+
+  <!-- Application Table -->
+  <div class="table-container">
+    <table class="app-table" id="app-table">
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Role</th>
+          <th>Applied</th>
+          <th>Source</th>
+          <th>Status</th>
+          <th>Follow-up</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <!-- Rows rendered by popup.js -->
+      </tbody>
+    </table>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <div class="empty-icon">📭</div>
+      <div class="empty-title">No applications tracked yet</div>
+      <div class="empty-sub">Apply on LinkedIn or click <strong>+ Add Job</strong> to start tracking</div>
+    </div>
+  </div>
+
+  <!-- Undo Bar -->
+  <div class="undo-bar" id="undo-bar" style="display:none">
+    <span id="undo-msg">Application deleted</span>
+    <button class="undo-btn" id="btn-undo">Undo (5s)</button>
+  </div>
+
+  <!-- Modal: Add Job -->
+  <div class="modal-overlay" id="modal-add" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Add Application</span>
+        <button class="modal-close" id="modal-add-close">×</button>
+      </div>
+      <form id="form-add" class="modal-form">
+        <div class="form-row">
+          <label>Company <span class="req">*</span></label>
+          <input type="text" id="add-company" required placeholder="Razorpay" />
+        </div>
+        <div class="form-row">
+          <label>Job Title <span class="req">*</span></label>
+          <input type="text" id="add-title" required placeholder="Senior QA Engineer" />
+        </div>
+        <div class="form-row">
+          <label>Job URL</label>
+          <input type="url" id="add-joburl" placeholder="https://linkedin.com/jobs/view/…" />
+        </div>
+        <div class="form-row">
+          <label>Portal URL</label>
+          <input type="url" id="add-portalurl" placeholder="https://company.com/careers/…" />
+        </div>
+        <div class="form-row">
+          <label>Applied Date <span class="req">*</span></label>
+          <input type="date" id="add-date" required />
+        </div>
+        <div class="form-row">
+          <label>Source</label>
+          <select id="add-source">
+            <option value="manual">Manual Entry</option>
+            <option value="linkedin_easy_apply">LinkedIn Easy Apply</option>
+            <option value="linkedin_external">LinkedIn External Portal</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Hiring Manager Email</label>
+          <input type="email" id="add-hm-email" placeholder="recruiter@company.com" />
+        </div>
+        <div class="form-row">
+          <label>Notes</label>
+          <textarea id="add-notes" rows="2" placeholder="Optional notes about this application…"></textarea>
+        </div>
+        <div class="form-row">
+          <label>Tags (comma-separated)</label>
+          <input type="text" id="add-tags" placeholder="product-company, remote, fintech" />
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="modal-add-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Application</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Job -->
+  <div class="modal-overlay" id="modal-edit" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Edit Application</span>
+        <button class="modal-close" id="modal-edit-close">×</button>
+      </div>
+      <form id="form-edit" class="modal-form">
+        <input type="hidden" id="edit-id" />
+        <div class="form-row">
+          <label>Company <span class="req">*</span></label>
+          <input type="text" id="edit-company" required />
+        </div>
+        <div class="form-row">
+          <label>Job Title <span class="req">*</span></label>
+          <input type="text" id="edit-title" required />
+        </div>
+        <div class="form-row">
+          <label>Job URL</label>
+          <input type="url" id="edit-joburl" />
+        </div>
+        <div class="form-row">
+          <label>Status</label>
+          <select id="edit-status">
+            <option value="Applied">Applied</option>
+            <option value="Followed Up">Followed Up</option>
+            <option value="Interview Scheduled">Interview Scheduled</option>
+            <option value="Technical Round">Technical Round</option>
+            <option value="HR Round">HR Round</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Ghosted">Ghosted</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Hiring Manager Name</label>
+          <input type="text" id="edit-hm-name" placeholder="Optional" />
+        </div>
+        <div class="form-row">
+          <label>Hiring Manager Email</label>
+          <input type="email" id="edit-hm-email" placeholder="Optional" />
+        </div>
+        <div class="form-row">
+          <label>Notes</label>
+          <textarea id="edit-notes" rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <label>Tags (comma-separated)</label>
+          <input type="text" id="edit-tags" />
+        </div>
+        <div class="form-row form-row-check">
+          <label><input type="checkbox" id="edit-followup-sent" /> Follow-up sent</label>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="modal-edit-cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Follow-up Email -->
+  <div class="modal-overlay" id="modal-email" style="display:none">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <span class="modal-title">Follow-up Email</span>
+        <button class="modal-close" id="modal-email-close">×</button>
+      </div>
+      <div id="email-loading" class="email-loading" style="display:none">
+        <div class="spinner"></div>
+        <span>Generating with Gemini…</span>
+      </div>
+      <div id="email-content" class="email-content">
+        <div class="form-row">
+          <label>Subject</label>
+          <input type="text" id="email-subject" readonly />
+        </div>
+        <div class="form-row">
+          <label>Body</label>
+          <textarea id="email-body" rows="10" readonly></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" id="btn-copy-email">📋 Copy to Clipboard</button>
+          <button class="btn btn-primary" id="btn-mailto">✉ Open in Mail App</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: AI Response -->
+  <div class="modal-overlay" id="modal-ai" style="display:none">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-ai-title">AI Analysis</span>
+        <button class="modal-close" id="modal-ai-close">×</button>
+      </div>
+      <div id="ai-loading" class="email-loading" style="display:none">
+        <div class="spinner"></div>
+        <span id="ai-loading-text">Analyzing with Gemini…</span>
+      </div>
+      <div id="ai-input-section" class="ai-input-section" style="display:none">
+        <textarea id="ai-input-text" rows="8" placeholder="Paste the job description here…"></textarea>
+        <button class="btn btn-primary" id="btn-ai-submit" style="margin-top:8px">Analyze</button>
+      </div>
+      <div id="ai-response" class="ai-response" style="display:none">
+        <pre id="ai-response-text"></pre>
+        <button class="btn btn-ghost" id="btn-copy-ai">📋 Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../utils/uuid.js"></script>
+  <script src="../utils/storage.js"></script>
+  <script src="../utils/emailTemplates.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
